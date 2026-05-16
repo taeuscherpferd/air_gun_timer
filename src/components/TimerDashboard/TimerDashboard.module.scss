@@ -1,0 +1,95 @@
+.dashboard {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  padding: clamp(1.25rem, 5vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: rgba(32, 41, 32, 0.88);
+  box-shadow: var(--shadow-soft);
+}
+
+.statusStrip {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.timerFace {
+  position: relative;
+  display: grid;
+  width: min(72vw, 24rem);
+  aspect-ratio: 1;
+  place-items: center;
+}
+
+.progressRing {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progressTrack,
+.progressValue {
+  fill: none;
+  stroke-width: 9;
+}
+
+.progressTrack {
+  stroke: rgba(243, 241, 232, 0.1);
+}
+
+.progressValue {
+  stroke: var(--color-accent);
+  stroke-linecap: round;
+  transition: stroke-dasharray 240ms ease;
+}
+
+.timerReadout {
+  position: absolute;
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+}
+
+.timerLabel {
+  color: var(--color-muted);
+  font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+.timerReadout strong {
+  font-size: clamp(3rem, 16vw, 6.5rem);
+  line-height: 1;
+}
+
+.selectionResult {
+  display: grid;
+  width: min(100%, 26rem);
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(242, 193, 78, 0.3);
+  border-radius: var(--radius-control);
+  background: rgba(242, 193, 78, 0.1);
+  text-align: center;
+}
+
+.selectionResult span {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.selectionResult strong {
+  color: var(--color-accent);
+  font-size: 1.45rem;
+}
+
+.errorMessage {
+  width: min(100%, 32rem);
+  margin: 0;
+  color: var(--color-danger);
+  text-align: center;
+}

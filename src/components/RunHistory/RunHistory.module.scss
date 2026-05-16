@@ -1,0 +1,58 @@
+.historyPanel {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-panel);
+}
+
+.historyHeader {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.historyHeader h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.emptyState {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.historyList {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.historyItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: rgba(18, 25, 21, 0.45);
+}
+
+.historyItem div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.historyItem div:last-child {
+  justify-items: end;
+}
+
+.historyItem span,
+.historyItem time {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}

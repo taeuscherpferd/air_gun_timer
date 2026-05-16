@@ -1,0 +1,72 @@
+.cardHeader,
+.row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.cardHeader {
+  justify-content: space-between;
+}
+
+.headerButton,
+.cardHeader button {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-panel-strong);
+  color: var(--color-text);
+}
+
+.loopToggle,
+.enabledToggle {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--color-muted);
+}
+
+.timerList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.timerCard {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: rgba(18, 25, 21, 0.45);
+}
+
+.row {
+  align-items: end;
+}
+
+.field {
+  display: grid;
+  flex: 1;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.45rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: #131a16;
+  color: var(--color-text);
+  padding: 0 0.7rem;
+}

@@ -1,0 +1,122 @@
+.optionMainRow {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.headerButton,
+.optionCard button {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-panel-strong);
+  color: var(--color-text);
+}
+
+.optionList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.optionCard {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: rgba(18, 25, 21, 0.45);
+}
+
+.readToggle,
+.enabledToggle {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--color-muted);
+}
+
+.enabledToggle {
+  flex: 0 0 auto;
+}
+
+.field,
+.weightField {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field {
+  flex: 1;
+}
+
+.weightField {
+  flex: 0 0 5.5rem;
+}
+
+.field span,
+.weightField span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
+.field input,
+.weightField input {
+  width: 100%;
+  min-height: 2.45rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: #131a16;
+  color: var(--color-text);
+  padding: 0 0.7rem;
+}
+
+.audioRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.audioPicker {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 2.5rem;
+  flex: 1;
+  gap: 0.5rem;
+  align-items: center;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-control);
+  background: rgba(19, 26, 22, 0.72);
+  color: var(--color-muted);
+  padding: 0 0.7rem;
+}
+
+.audioPicker span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audioPicker input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 560px) {
+  .optionMainRow {
+    display: grid;
+    grid-template-columns: 1fr 5.5rem 2.5rem;
+  }
+
+  .enabledToggle {
+    grid-column: 1 / -1;
+  }
+}

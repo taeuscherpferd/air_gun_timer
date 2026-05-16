@@ -1,0 +1,58 @@
+.panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-panel);
+}
+
+.panelHeader {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggleButton {
+  display: inline-flex;
+  min-width: 0;
+  flex: 1;
+  gap: 0.55rem;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  padding: 0;
+  text-align: left;
+}
+
+.headingText {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.headingText span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.headingText strong {
+  overflow-wrap: anywhere;
+  font-size: 1.2rem;
+  line-height: 1.15;
+}
+
+.actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.content {
+  display: grid;
+  gap: 1rem;
+}
