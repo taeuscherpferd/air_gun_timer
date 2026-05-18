@@ -16,6 +16,10 @@
   --color-accent-strong: #f08c52;
   --color-danger: #f06a6a;
   --color-good: #70d099;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
   --shadow-soft: 0 1.25rem 3rem rgba(0, 0, 0, 0.28);
   --radius-panel: 0.5rem;
   --radius-control: 0.45rem;
@@ -34,6 +38,7 @@ html {
 body {
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
 }
 
@@ -56,4 +61,5 @@ select:disabled {
 
 #root {
   min-height: 100vh;
+  min-height: 100dvh;
 }

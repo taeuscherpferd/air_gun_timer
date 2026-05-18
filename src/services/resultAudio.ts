@@ -63,6 +63,8 @@ export class ResultAudio {
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
+
+    window.GunTimerAndroidSpeech?.stop();
   }
 
   private static async playAudioFile(audioDataUrl: string): Promise<void> {
@@ -82,6 +84,10 @@ export class ResultAudio {
   }
 
   private static speak(text: string): void {
+    if (this.speakWithAndroid(text)) {
+      return;
+    }
+
     if (!("speechSynthesis" in window)) {
       return;
     }
@@ -90,6 +96,20 @@ export class ResultAudio {
     utterance.rate = 0.95;
     utterance.pitch = 1;
     window.speechSynthesis.speak(utterance);
+  }
+
+  private static speakWithAndroid(text: string): boolean {
+    const trimmedText = text.trim();
+
+    if (!trimmedText) {
+      return false;
+    }
+
+    try {
+      return Boolean(window.GunTimerAndroidSpeech?.speak(trimmedText));
+    } catch {
+      return false;
+    }
   }
 
   private static async getReadyAudioContext(): Promise<AudioContext | null> {

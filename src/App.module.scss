@@ -1,5 +1,6 @@
 .appShell {
   min-height: 100vh;
+  min-height: 100dvh;
   background:
     radial-gradient(circle at 18% 0%, rgba(76, 137, 164, 0.16), transparent 28rem),
     linear-gradient(135deg, var(--color-surface), var(--color-canvas));
@@ -7,9 +8,15 @@
 }
 
 .workspace {
+  --workspace-padding: clamp(1rem, 3vw, 2rem);
+
   width: min(100%, 78rem);
   margin: 0 auto;
-  padding: clamp(1rem, 3vw, 2rem);
+  padding:
+    calc(var(--workspace-padding) + var(--safe-area-top))
+    calc(var(--workspace-padding) + var(--safe-area-right))
+    calc(var(--workspace-padding) + var(--safe-area-bottom))
+    calc(var(--workspace-padding) + var(--safe-area-left));
 }
 
 .configGrid {

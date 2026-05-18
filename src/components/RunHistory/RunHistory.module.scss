@@ -51,6 +51,8 @@
 }
 
 .historyDrawer {
+  --drawer-padding: 1rem;
+
   position: fixed;
   inset-block: 0;
   right: 0;
@@ -58,7 +60,11 @@
   width: min(24rem, 100vw);
   align-content: start;
   gap: 0.85rem;
-  padding: 1rem;
+  padding:
+    calc(var(--drawer-padding) + var(--safe-area-top))
+    calc(var(--drawer-padding) + var(--safe-area-right))
+    calc(var(--drawer-padding) + var(--safe-area-bottom))
+    var(--drawer-padding);
   overflow: auto;
   border-left: 1px solid var(--color-border);
   background: var(--color-panel);
