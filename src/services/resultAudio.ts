@@ -1,3 +1,5 @@
+import { invoke } from "@tauri-apps/api/core";
+
 import type { SelectionOption } from "@/domain/timerTypes";
 
 interface WebAudioWindow extends Window {
@@ -39,7 +41,7 @@ export class ResultAudio {
     }
 
     if (readSelectionAloud) {
-      this.speak(option.label);
+      await this.speak(option.label);
     }
   }
 
@@ -64,7 +66,7 @@ export class ResultAudio {
       window.speechSynthesis.cancel();
     }
 
-    window.GunTimerAndroidSpeech?.stop();
+    void this.stopNativeSpeech();
   }
 
   private static async playAudioFile(audioDataUrl: string): Promise<void> {
@@ -83,8 +85,8 @@ export class ResultAudio {
     await this.playWithAudioElement(audioDataUrl);
   }
 
-  private static speak(text: string): void {
-    if (this.speakWithAndroid(text)) {
+  private static async speak(text: string): Promise<void> {
+    if (await this.speakWithNativeTts(text)) {
       return;
     }
 
@@ -98,17 +100,34 @@ export class ResultAudio {
     window.speechSynthesis.speak(utterance);
   }
 
-  private static speakWithAndroid(text: string): boolean {
+  private static async speakWithNativeTts(text: string): Promise<boolean> {
     const trimmedText = text.trim();
 
     if (!trimmedText) {
       return false;
     }
 
+    if (!window.__TAURI_INTERNALS__) {
+      return false;
+    }
+
     try {
-      return Boolean(window.GunTimerAndroidSpeech?.speak(trimmedText));
+      await invoke<void>("plugin:android-tts|speak", { text: trimmedText });
+      return true;
     } catch {
       return false;
+    }
+  }
+
+  private static async stopNativeSpeech(): Promise<void> {
+    if (!window.__TAURI_INTERNALS__) {
+      return;
+    }
+
+    try {
+      await invoke<void>("plugin:android-tts|stop");
+    } catch {
+      return;
     }
   }
 

@@ -1,0 +1,17 @@
+[package]
+name = "tauri-plugin-android-tts"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+links = "tauri-plugin-android-tts"
+
+[lib]
+name = "tauri_plugin_android_tts"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2", default-features = false }
+
+[build-dependencies]
+tauri-plugin = { version = "2", features = ["build"] }

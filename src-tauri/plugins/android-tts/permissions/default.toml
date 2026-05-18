@@ -1,0 +1,5 @@
+"$schema" = "schemas/schema.json"
+
+[default]
+description = "Allows Gun Timer to speak and stop spoken completion results on Android."
+permissions = ["allow-speak", "allow-stop"]

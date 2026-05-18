@@ -15,6 +15,7 @@ fn choose_option(options: Vec<SelectionOption>) -> Result<SelectionResult, Strin
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_android_tts::init())
         .invoke_handler(tauri::generate_handler![
             resolve_timer_duration,
             choose_option

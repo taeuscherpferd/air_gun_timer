@@ -90,7 +90,7 @@ pnpm run android:build
   short sound effects or voice clips are a better fit than large audio tracks.
 - Completion audio is primed from Start/Skip taps so Android WebView can play
   attached option clips after timer callbacks.
-- Most of `src-tauri/gen` is intentionally ignored because `tauri android init`
-  generates platform-specific project files there. The Android `MainActivity.kt`
-  file is tracked because it hosts the native text-to-speech bridge used for
-  spoken completion results.
+- `src-tauri/gen` is intentionally ignored because `tauri android init` generates
+  platform-specific Android project files there. Native spoken completion results
+  are implemented in the tracked local Android TTS plugin under
+  `src-tauri/plugins/android-tts`.
