@@ -8,6 +8,7 @@ import type {
   SelectionResult,
   SessionStatus,
   TimerConfig,
+  TimerMoveDirection,
   TimerStep
 } from "@/domain/timerTypes";
 import { ConfigStorage } from "@/services/configStorage";
@@ -81,6 +82,14 @@ export const appSlice = createSlice({
       state.config.timers = state.config.timers.filter((timer) => timer.id !== action.payload);
       persistConfig(state.config);
     },
+    moveTimer(state, action: PayloadAction<{ id: string; direction: TimerMoveDirection }>) {
+      state.config.timers = TimerDashboardLogic.moveTimer(
+        state.config.timers,
+        action.payload.id,
+        action.payload.direction
+      );
+      persistConfig(state.config);
+    },
     addOption(state) {
       state.config.options.push({
         id: createId("option"),
@@ -117,7 +126,7 @@ export const appSlice = createSlice({
       state.activeRound = {
         timerId: action.payload.timer.id,
         timerIndex: action.payload.timerIndex,
-        label: action.payload.timer.label,
+        label: TimerDashboardLogic.displayTimerLabel(action.payload.timer.label),
         durationSeconds: action.payload.durationSeconds,
         remainingSeconds: action.payload.durationSeconds,
         startedAt: Date.now()
@@ -179,6 +188,7 @@ export const {
   addTimer,
   completeRound,
   markComplete,
+  moveTimer,
   pauseRound,
   removeOption,
   removeTimer,

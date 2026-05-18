@@ -18,7 +18,7 @@ export const CollapsibleSection = ({
   eyebrow,
   actions,
   children,
-  defaultExpanded = true,
+  defaultExpanded = false,
   ariaLabel
 }: CollapsibleSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);

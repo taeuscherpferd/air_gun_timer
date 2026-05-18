@@ -1,21 +1,79 @@
-import { Plus, Trash2 } from "lucide-react";
-import type { ChangeEvent } from "react";
+import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import { useState, type ChangeEvent, type FocusEvent } from "react";
 
 import { CollapsibleSection } from "@/components/CollapsibleSection/CollapsibleSection";
-import type { TimerDurationMode } from "@/domain/timerTypes";
-import { addTimer, removeTimer, setLoopSession, updateTimer } from "@/store/appSlice";
+import { TimerDashboardLogic } from "@/components/TimerDashboard/TimerDashboard.logic";
+import type { TimerDurationMode, TimerStep } from "@/domain/timerTypes";
+import { addTimer, moveTimer, removeTimer, setLoopSession, updateTimer } from "@/store/appSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import styles from "./TimerEditor.module.scss";
+
+const timerNumberFields = ["fixedSeconds", "minSeconds", "maxSeconds"] as const;
+
+type TimerNumberField = (typeof timerNumberFields)[number];
+
+type TimerNumberDraft = Partial<Record<TimerNumberField, string>>;
+
+type TimerNumberDrafts = Record<string, TimerNumberDraft>;
 
 export const TimerEditor = () => {
   const dispatch = useAppDispatch();
   const timers = useAppSelector((state) => state.app.config.timers);
   const loopSession = useAppSelector((state) => state.app.config.loopSession);
+  const [numberDrafts, setNumberDrafts] = useState<TimerNumberDrafts>({});
 
-  const handleNumberChange = (id: string, field: "fixedSeconds" | "minSeconds" | "maxSeconds") => {
+  const handleNumberChange = (timer: TimerStep, field: TimerNumberField) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
-      dispatch(updateTimer({ id, [field]: Number(event.target.value) }));
+      const value = event.target.value;
+
+      setNumberDrafts((currentDrafts) => ({
+        ...currentDrafts,
+        [timer.id]: {
+          ...currentDrafts[timer.id],
+          [field]: value
+        }
+      }));
+
+      if (value === "") {
+        return;
+      }
+
+      dispatch(updateTimer({ id: timer.id, [field]: Number(value) }));
+    };
+  };
+
+  const handleNumberBlur = (timer: TimerStep, field: TimerNumberField) => {
+    return (event: FocusEvent<HTMLInputElement>) => {
+      const normalizedValue = TimerDashboardLogic.normalizeSeconds(Number(event.target.value));
+
+      setNumberDrafts((currentDrafts) => {
+        const timerDraft = currentDrafts[timer.id];
+
+        if (!timerDraft) {
+          return currentDrafts;
+        }
+
+        const nextTimerDraft: TimerNumberDraft = {};
+
+        for (const timerNumberField of timerNumberFields) {
+          if (timerNumberField !== field && timerDraft[timerNumberField] !== undefined) {
+            nextTimerDraft[timerNumberField] = timerDraft[timerNumberField];
+          }
+        }
+
+        const nextDrafts = { ...currentDrafts };
+
+        if (Object.keys(nextTimerDraft).length === 0) {
+          delete nextDrafts[timer.id];
+        } else {
+          nextDrafts[timer.id] = nextTimerDraft;
+        }
+
+        return nextDrafts;
+      });
+
+      dispatch(updateTimer({ id: timer.id, [field]: normalizedValue }));
     };
   };
 
@@ -45,7 +103,7 @@ export const TimerEditor = () => {
         <span>Loop sequence</span>
       </label>
       <div className={styles.timerList}>
-        {timers.map((timer) => (
+        {timers.map((timer, timerIndex) => (
           <article className={styles.timerCard} key={timer.id}>
             <div className={styles.cardHeader}>
               <label className={styles.enabledToggle}>
@@ -58,13 +116,31 @@ export const TimerEditor = () => {
                 />
                 <span>Enabled</span>
               </label>
-              <button
-                type="button"
-                onClick={() => dispatch(removeTimer(timer.id))}
-                aria-label={`Remove ${timer.label}`}
-              >
-                <Trash2 size={16} />
-              </button>
+              <div className={styles.cardActions}>
+                <button
+                  type="button"
+                  onClick={() => dispatch(moveTimer({ id: timer.id, direction: "up" }))}
+                  disabled={timerIndex === 0}
+                  aria-label={`Move ${TimerDashboardLogic.displayTimerLabel(timer.label)} up`}
+                >
+                  <ArrowUp size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => dispatch(moveTimer({ id: timer.id, direction: "down" }))}
+                  disabled={timerIndex === timers.length - 1}
+                  aria-label={`Move ${TimerDashboardLogic.displayTimerLabel(timer.label)} down`}
+                >
+                  <ArrowDown size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => dispatch(removeTimer(timer.id))}
+                  aria-label={`Remove ${TimerDashboardLogic.displayTimerLabel(timer.label)}`}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
             <label className={styles.field}>
               <span>Name</span>
@@ -86,8 +162,9 @@ export const TimerEditor = () => {
                 <input
                   type="number"
                   min="1"
-                  value={timer.fixedSeconds}
-                  onChange={handleNumberChange(timer.id, "fixedSeconds")}
+                  value={numberDrafts[timer.id]?.fixedSeconds ?? timer.fixedSeconds}
+                  onBlur={handleNumberBlur(timer, "fixedSeconds")}
+                  onChange={handleNumberChange(timer, "fixedSeconds")}
                 />
               </label>
             </div>
@@ -97,8 +174,9 @@ export const TimerEditor = () => {
                 <input
                   type="number"
                   min="1"
-                  value={timer.minSeconds}
-                  onChange={handleNumberChange(timer.id, "minSeconds")}
+                  value={numberDrafts[timer.id]?.minSeconds ?? timer.minSeconds}
+                  onBlur={handleNumberBlur(timer, "minSeconds")}
+                  onChange={handleNumberChange(timer, "minSeconds")}
                 />
               </label>
               <label className={styles.field}>
@@ -106,8 +184,9 @@ export const TimerEditor = () => {
                 <input
                   type="number"
                   min="1"
-                  value={timer.maxSeconds}
-                  onChange={handleNumberChange(timer.id, "maxSeconds")}
+                  value={numberDrafts[timer.id]?.maxSeconds ?? timer.maxSeconds}
+                  onBlur={handleNumberBlur(timer, "maxSeconds")}
+                  onChange={handleNumberChange(timer, "maxSeconds")}
                 />
               </label>
             </div>

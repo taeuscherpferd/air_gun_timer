@@ -2,6 +2,7 @@ import { FileAudio, Plus, Trash2, X } from "lucide-react";
 import type { ChangeEvent } from "react";
 
 import { CollapsibleSection } from "@/components/CollapsibleSection/CollapsibleSection";
+import { TimerDashboardLogic } from "@/components/TimerDashboard/TimerDashboard.logic";
 import {
   addOption,
   removeOption,
@@ -116,7 +117,7 @@ export const OptionEditor = () => {
               <button
                 type="button"
                 onClick={() => dispatch(removeOption(option.id))}
-                aria-label={`Remove ${option.label}`}
+                aria-label={`Remove ${TimerDashboardLogic.selectionLabel(option.label)}`}
               >
                 <Trash2 size={16} />
               </button>

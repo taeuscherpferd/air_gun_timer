@@ -1,14 +1,78 @@
-.historyPanel {
-  display: grid;
-  gap: 0.75rem;
+.historyTrigger {
+  display: flex;
+  width: 100%;
   margin-top: 1rem;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
   padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-panel);
   background: var(--color-panel);
+  color: var(--color-text);
+  text-align: left;
+}
+
+.historyTrigger:hover {
+  background: var(--color-panel-strong);
+}
+
+.triggerText {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.triggerTitle {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-weight: 800;
+}
+
+.triggerHint {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.triggerIcon,
+.triggerIconOpen {
+  flex: 0 0 auto;
+  transition: transform 160ms ease;
+}
+
+.triggerIconOpen {
+  transform: rotate(180deg);
+}
+
+.drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.historyDrawer {
+  position: fixed;
+  inset-block: 0;
+  right: 0;
+  display: grid;
+  width: min(24rem, 100vw);
+  align-content: start;
+  gap: 0.85rem;
+  padding: 1rem;
+  overflow: auto;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-panel);
+  box-shadow: var(--shadow-soft);
 }
 
 .historyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.historyHeader div {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -17,6 +81,22 @@
 .historyHeader h2 {
   margin: 0;
   font-size: 1.15rem;
+}
+
+.closeButton {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-panel-strong);
+  color: var(--color-text);
+}
+
+.closeButton:hover {
+  filter: brightness(1.08);
 }
 
 .emptyState {
@@ -55,4 +135,14 @@
 .historyItem time {
   color: var(--color-muted);
   font-size: 0.85rem;
+}
+
+@media (max-width: 460px) {
+  .historyItem {
+    display: grid;
+  }
+
+  .historyItem div:last-child {
+    justify-items: start;
+  }
 }

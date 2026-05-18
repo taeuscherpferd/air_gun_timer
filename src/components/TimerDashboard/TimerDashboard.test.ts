@@ -22,10 +22,36 @@ describe("TimerDashboardLogic", () => {
       enabled: true
     });
 
-    expect(timer.label).toBe("Timer");
+    expect(timer.label).toBe("");
     expect(timer.fixedSeconds).toBe(1);
     expect(timer.minSeconds).toBe(25);
     expect(timer.maxSeconds).toBe(25);
+  });
+
+  it("uses a default display label for blank timers", () => {
+    expect(TimerDashboardLogic.displayTimerLabel(" ")).toBe("Timer");
+  });
+
+  it("moves timers up and down", () => {
+    const config = TimerDashboardLogic.createDefaultConfig();
+
+    const movedDown = TimerDashboardLogic.moveTimer(config.timers, config.timers[0].id, "down");
+    const movedUp = TimerDashboardLogic.moveTimer(movedDown, config.timers[0].id, "up");
+
+    expect(movedDown.map((timer) => timer.id)).toEqual([
+      config.timers[1].id,
+      config.timers[0].id
+    ]);
+    expect(movedUp.map((timer) => timer.id)).toEqual(config.timers.map((timer) => timer.id));
+  });
+
+  it("keeps timer order unchanged for invalid moves", () => {
+    const config = TimerDashboardLogic.createDefaultConfig();
+
+    expect(TimerDashboardLogic.moveTimer(config.timers, config.timers[0].id, "up")).toBe(
+      config.timers
+    );
+    expect(TimerDashboardLogic.moveTimer(config.timers, "missing", "down")).toBe(config.timers);
   });
 
   it("selects the next enabled timer and respects looping", () => {
@@ -48,6 +74,13 @@ describe("TimerDashboardLogic", () => {
     expect(duration).toBeLessThanOrEqual(config.timers[1].maxSeconds);
   });
 
+  it("keeps blank option labels editable", () => {
+    const config = TimerDashboardLogic.createDefaultConfig();
+    const option = TimerDashboardLogic.normalizeOption({ ...config.options[0], label: " " });
+
+    expect(option.label).toBe("");
+  });
+
   it("uses option weights for local selection", () => {
     const config = TimerDashboardLogic.createDefaultConfig();
 
@@ -61,5 +94,12 @@ describe("TimerDashboardLogic", () => {
     );
 
     expect(selection.optionId).toBe(config.options[1].id);
+  });
+
+  it("uses a default result label for blank options", () => {
+    const config = TimerDashboardLogic.createDefaultConfig();
+    const selection = TimerDashboardLogic.localSelection([{ ...config.options[0], label: "" }], 0);
+
+    expect(selection.label).toBe("Option");
   });
 });

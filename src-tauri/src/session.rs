@@ -77,7 +77,9 @@ fn random_duration(min_seconds: u64, max_seconds: u64) -> Result<u64, String> {
     let min_seconds = normalize_seconds(min_seconds)?;
 
     if max_seconds < min_seconds {
-        return Err("Random timer maximum must be greater than or equal to the minimum.".to_string());
+        return Err(
+            "Random timer maximum must be greater than or equal to the minimum.".to_string(),
+        );
     }
 
     Ok(rand::thread_rng().gen_range(min_seconds..=max_seconds))
@@ -91,7 +93,7 @@ fn pick_option_with_target(
         if target < option.weight {
             return Ok(SelectionResult {
                 option_id: option.id.clone(),
-                label: option.label.clone(),
+                label: selection_label(&option.label),
                 option_index: *index,
             });
         }
@@ -100,6 +102,16 @@ fn pick_option_with_target(
     }
 
     Err("Random option target was outside the available weight range.".to_string())
+}
+
+fn selection_label(label: &str) -> String {
+    let trimmed_label = label.trim();
+
+    if trimmed_label.is_empty() {
+        return "Option".to_string();
+    }
+
+    trimmed_label.to_string()
 }
 
 #[cfg(test)]
@@ -165,7 +177,11 @@ mod tests {
 
     #[test]
     fn option_pick_ignores_disabled_and_zero_weight_options() {
-        let options = vec![option("a", 0, true), option("b", 3, false), option("c", 1, true)];
+        let options = vec![
+            option("a", 0, true),
+            option("b", 3, false),
+            option("c", 1, true),
+        ];
         let picked = pick_option(&options).expect("picked option");
 
         assert_eq!(picked.option_id, "c");
@@ -189,5 +205,20 @@ mod tests {
 
         assert_eq!(first.option_id, "a");
         assert_eq!(second.option_id, "b");
+    }
+
+    #[test]
+    fn option_pick_uses_default_label_for_blank_options() {
+        let options = vec![SelectionOption {
+            id: "blank".to_string(),
+            label: " ".to_string(),
+            weight: 1,
+            enabled: true,
+        }];
+        let eligible_options: Vec<(usize, &SelectionOption)> = options.iter().enumerate().collect();
+
+        let picked = pick_option_with_target(&eligible_options, 0).expect("picked option");
+
+        assert_eq!(picked.label, "Option");
     }
 }

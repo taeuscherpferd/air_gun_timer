@@ -9,8 +9,14 @@
   justify-content: space-between;
 }
 
+.cardActions {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
 .headerButton,
-.cardHeader button {
+.cardActions button {
   display: inline-flex;
   width: 2.5rem;
   height: 2.5rem;
@@ -20,6 +26,11 @@
   border-radius: var(--radius-control);
   background: var(--color-panel-strong);
   color: var(--color-text);
+}
+
+.cardActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
 }
 
 .loopToggle,

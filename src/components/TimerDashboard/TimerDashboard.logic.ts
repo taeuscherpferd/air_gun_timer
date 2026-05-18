@@ -2,6 +2,7 @@ import type {
   SelectionOption,
   SelectionResult,
   TimerConfig,
+  TimerMoveDirection,
   TimerStep
 } from "@/domain/timerTypes";
 
@@ -73,6 +74,26 @@ export class TimerDashboardLogic {
     return this.activeTimers(config).length > 0 && this.activeOptions(config).length > 0;
   }
 
+  static moveTimer(timers: TimerStep[], timerId: string, direction: TimerMoveDirection): TimerStep[] {
+    const currentIndex = timers.findIndex((timer) => timer.id === timerId);
+
+    if (currentIndex === -1) {
+      return timers;
+    }
+
+    const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+    if (targetIndex < 0 || targetIndex >= timers.length) {
+      return timers;
+    }
+
+    const reorderedTimers = [...timers];
+    const [movedTimer] = reorderedTimers.splice(currentIndex, 1);
+    reorderedTimers.splice(targetIndex, 0, movedTimer);
+
+    return reorderedTimers;
+  }
+
   static normalizeSeconds(value: number): number {
     if (!Number.isFinite(value)) {
       return this.minimumSeconds;
@@ -95,21 +116,29 @@ export class TimerDashboardLogic {
 
     return {
       ...timer,
-      label: timer.label.trim() || "Timer",
+      label: timer.label.trim(),
       fixedSeconds: this.normalizeSeconds(timer.fixedSeconds),
       minSeconds,
       maxSeconds
     };
   }
 
+  static displayTimerLabel(label: string): string {
+    return label.trim() || "Timer";
+  }
+
   static normalizeOption(option: SelectionOption): SelectionOption {
     return {
       ...option,
-      label: option.label.trim() || "Option",
+      label: option.label.trim(),
       weight: this.normalizeWeight(option.weight),
       audioDataUrl: option.audioDataUrl ?? null,
       audioFileName: option.audioFileName ?? null
     };
+  }
+
+  static selectionLabel(label: string): string {
+    return label.trim() || "Option";
   }
 
   static nextTimerIndex(config: TimerConfig, currentIndex: number): number | null {
@@ -166,7 +195,7 @@ export class TimerDashboardLogic {
       if (cursor < 0) {
         return {
           optionId: option.id,
-          label: option.label,
+          label: this.selectionLabel(option.label),
           optionIndex: options.findIndex((candidate) => candidate.id === option.id)
         };
       }
@@ -175,7 +204,7 @@ export class TimerDashboardLogic {
     const fallback = activeOptions[activeOptions.length - 1];
     return {
       optionId: fallback.id,
-      label: fallback.label,
+      label: this.selectionLabel(fallback.label),
       optionIndex: options.findIndex((candidate) => candidate.id === fallback.id)
     };
   }

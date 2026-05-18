@@ -1,5 +1,7 @@
 export type TimerDurationMode = "fixed" | "random";
 
+export type TimerMoveDirection = "up" | "down";
+
 export type SessionStatus = "idle" | "running" | "paused" | "complete";
 
 export interface SelectionOption {

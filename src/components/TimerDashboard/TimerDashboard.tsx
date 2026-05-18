@@ -133,6 +133,8 @@ export const TimerDashboard = () => {
       return;
     }
 
+    void ResultAudio.prepare();
+
     if (status === "paused") {
       clearQueuedRound();
 
@@ -157,6 +159,7 @@ export const TimerDashboard = () => {
   };
 
   const handleSkip = () => {
+    void ResultAudio.prepare();
     void completeCurrentRound();
   };
 

@@ -15,6 +15,7 @@ flows.
 - Configurable options with weights and enabled/disabled states.
 - Optional spoken results with per-option audio file overrides.
 - Configurable timer steps with fixed or random duration ranges.
+- Reorderable timer steps for changing interval sequence without rebuilding it.
 - Collapsible timer and option sections for a compact running view.
 - Run, pause, reset, skip, and loop controls.
 - Local storage persistence for timer and option configuration.
@@ -87,5 +88,7 @@ pnpm run android:build
   randomization logic.
 - Attached option audio is stored in browser/Tauri web storage as a data URL, so
   short sound effects or voice clips are a better fit than large audio tracks.
+- Completion audio is primed from Start/Skip taps so Android WebView can play
+  attached option clips after timer callbacks.
 - `src-tauri/gen` is intentionally ignored because `tauri android init` generates
   platform-specific Android project files there.
