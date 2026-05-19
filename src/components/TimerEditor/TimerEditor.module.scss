@@ -5,6 +5,12 @@
   align-items: center;
 }
 
+.buttonWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
 .cardHeader {
   justify-content: space-between;
 }

@@ -1,8 +1,8 @@
 # Gun Timer
 
-Gun Timer is a Tauri 2 + React MVP for running configurable timer steps. When a
-timer completes, the app randomly selects one enabled option from the configured
-list and records the result. Timer steps can use fixed durations or randomized
+Gun Timer is a Tauri 2 + React MVP for running configurable timer steps. Each
+timer can either randomly select one enabled option when it completes or simply
+finish without a selection. Timer steps can use fixed durations or randomized
 intervals, which makes it useful for multi-step drills, prompts, or training
 flows.
 
@@ -14,7 +14,8 @@ flows.
   selection.
 - Configurable options with weights and enabled/disabled states.
 - Optional spoken results with per-option audio file overrides.
-- Configurable timer steps with fixed or random duration ranges.
+- Configurable timer steps with fixed or random duration ranges and per-step
+  option selection toggles.
 - Reorderable timer steps for changing interval sequence without rebuilding it.
 - Collapsible timer and option sections for a compact running view.
 - Run, pause, reset, skip, and loop controls.

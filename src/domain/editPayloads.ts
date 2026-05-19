@@ -7,7 +7,16 @@ export type SelectionOptionUpdate = Partial<
 };
 
 export type TimerStepUpdate = Partial<
-  Pick<TimerStep, "label" | "durationMode" | "fixedSeconds" | "minSeconds" | "maxSeconds" | "enabled">
+  Pick<
+    TimerStep,
+    | "label"
+    | "durationMode"
+    | "fixedSeconds"
+    | "minSeconds"
+    | "maxSeconds"
+    | "enabled"
+    | "selectOptionOnComplete"
+  >
 > & {
   id: string;
 };

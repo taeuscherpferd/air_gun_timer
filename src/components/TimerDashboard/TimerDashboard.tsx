@@ -31,9 +31,8 @@ export const TimerDashboard = () => {
 
   const activeTimers = useMemo(() => TimerDashboardLogic.activeTimers(config), [config]);
   const canRun = useMemo(() => TimerDashboardLogic.canRun(config), [config]);
-  const progress = activeRound
-    ? 1 - activeRound.remainingSeconds / activeRound.durationSeconds
-    : 0;
+  const isCompletedRound = status === "paused" && activeRound?.remainingSeconds === 0;
+  const progress = activeRound ? 1 - activeRound.remainingSeconds / activeRound.durationSeconds : 0;
 
   const startNextRound = useCallback(
     async (timerIndex: number) => {
@@ -66,19 +65,25 @@ export const TimerDashboard = () => {
     isResolvingRef.current = true;
 
     try {
-      const selection = await SessionEngine.chooseOption(config.options);
-      dispatch(completeRound(selection));
-      const selectedOption = config.options.find((option) => option.id === selection.optionId);
+      if (activeRound.selectOptionOnComplete) {
+        const selection = await SessionEngine.chooseOption(config.options);
+        dispatch(completeRound(selection));
+        const selectedOption = config.options.find((option) => option.id === selection.optionId);
 
-      try {
-        await ResultAudio.play(selectedOption, config.readSelectionAloud);
-      } catch {
-        if (config.readSelectionAloud) {
-          await ResultAudio.play(
-            selectedOption ? { ...selectedOption, audioDataUrl: null, audioFileName: null } : undefined,
-            true
-          );
+        try {
+          await ResultAudio.play(selectedOption, config.readSelectionAloud);
+        } catch {
+          if (config.readSelectionAloud) {
+            await ResultAudio.play(
+              selectedOption
+                ? { ...selectedOption, audioDataUrl: null, audioFileName: null }
+                : undefined,
+              true
+            );
+          }
         }
+      } else {
+        dispatch(completeRound(null));
       }
 
       const nextIndex = TimerDashboardLogic.nextTimerIndex(config, activeRound.timerIndex);
@@ -138,7 +143,7 @@ export const TimerDashboard = () => {
     if (status === "paused") {
       clearQueuedRound();
 
-      if (latestSelection && activeRound) {
+      if (isCompletedRound && activeRound) {
         const nextIndex = TimerDashboardLogic.nextTimerIndex(config, activeRound.timerIndex);
 
         if (nextIndex === null) {
@@ -173,7 +178,7 @@ export const TimerDashboard = () => {
   const primaryLabel =
     status === "running"
       ? "Pause"
-      : status === "paused" && latestSelection
+      : isCompletedRound
         ? "Next"
         : status === "paused"
           ? "Resume"

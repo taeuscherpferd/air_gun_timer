@@ -21,6 +21,7 @@ export interface TimerStep {
   minSeconds: number;
   maxSeconds: number;
   enabled: boolean;
+  selectOptionOnComplete: boolean;
 }
 
 export interface TimerConfig {
@@ -34,6 +35,7 @@ export interface ActiveRound {
   timerId: string;
   timerIndex: number;
   label: string;
+  selectOptionOnComplete: boolean;
   durationSeconds: number;
   remainingSeconds: number;
   startedAt: number;

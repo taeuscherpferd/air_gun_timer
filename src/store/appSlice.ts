@@ -63,7 +63,8 @@ export const appSlice = createSlice({
         fixedSeconds: 30,
         minSeconds: 15,
         maxSeconds: 60,
-        enabled: true
+        enabled: true,
+        selectOptionOnComplete: true
       });
       persistConfig(state.config);
     },
@@ -127,6 +128,7 @@ export const appSlice = createSlice({
         timerId: action.payload.timer.id,
         timerIndex: action.payload.timerIndex,
         label: TimerDashboardLogic.displayTimerLabel(action.payload.timer.label),
+        selectOptionOnComplete: action.payload.timer.selectOptionOnComplete,
         durationSeconds: action.payload.durationSeconds,
         remainingSeconds: action.payload.durationSeconds,
         startedAt: Date.now()
@@ -149,7 +151,7 @@ export const appSlice = createSlice({
 
       state.activeRound.remainingSeconds = Math.max(0, state.activeRound.remainingSeconds - 1);
     },
-    completeRound(state, action: PayloadAction<SelectionResult>) {
+    completeRound(state, action: PayloadAction<SelectionResult | null>) {
       if (!state.activeRound) {
         return;
       }
@@ -159,7 +161,7 @@ export const appSlice = createSlice({
         id: createId("history"),
         timerLabel: state.activeRound.label,
         durationSeconds: state.activeRound.durationSeconds,
-        selectedLabel: action.payload.label,
+        selectedLabel: action.payload?.label ?? "No selection",
         completedAt: new Date().toISOString()
       });
       state.history = state.history.slice(0, 12);

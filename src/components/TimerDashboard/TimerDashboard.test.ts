@@ -19,13 +19,49 @@ describe("TimerDashboardLogic", () => {
       fixedSeconds: -3,
       minSeconds: 25,
       maxSeconds: 10,
-      enabled: true
+      enabled: true,
+      selectOptionOnComplete: false
     });
 
     expect(timer.label).toBe("");
     expect(timer.fixedSeconds).toBe(1);
     expect(timer.minSeconds).toBe(25);
     expect(timer.maxSeconds).toBe(25);
+    expect(timer.selectOptionOnComplete).toBe(false);
+  });
+
+  it("keeps existing timer configs selecting options after normalization", () => {
+    const timer = TimerDashboardLogic.normalizeTimer({
+      id: "legacy",
+      label: "Legacy",
+      durationMode: "fixed",
+      fixedSeconds: 15,
+      minSeconds: 10,
+      maxSeconds: 20,
+      enabled: true
+    });
+
+    expect(timer.selectOptionOnComplete).toBe(true);
+  });
+
+  it("only requires options when an active timer selects options", () => {
+    const config = TimerDashboardLogic.createDefaultConfig();
+    const disabledOptions = config.options.map((option) => ({ ...option, enabled: false }));
+
+    expect(
+      TimerDashboardLogic.canRun({
+        ...config,
+        options: disabledOptions
+      })
+    ).toBe(false);
+
+    expect(
+      TimerDashboardLogic.canRun({
+        ...config,
+        options: disabledOptions,
+        timers: config.timers.map((timer) => ({ ...timer, selectOptionOnComplete: false }))
+      })
+    ).toBe(true);
   });
 
   it("uses a default display label for blank timers", () => {
@@ -38,10 +74,7 @@ describe("TimerDashboardLogic", () => {
     const movedDown = TimerDashboardLogic.moveTimer(config.timers, config.timers[0].id, "down");
     const movedUp = TimerDashboardLogic.moveTimer(movedDown, config.timers[0].id, "up");
 
-    expect(movedDown.map((timer) => timer.id)).toEqual([
-      config.timers[1].id,
-      config.timers[0].id
-    ]);
+    expect(movedDown.map((timer) => timer.id)).toEqual([config.timers[1].id, config.timers[0].id]);
     expect(movedUp.map((timer) => timer.id)).toEqual(config.timers.map((timer) => timer.id));
   });
 

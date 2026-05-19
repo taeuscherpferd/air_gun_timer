@@ -6,6 +6,10 @@ import type {
   TimerStep
 } from "@/domain/timerTypes";
 
+type PersistedTimerStep = Omit<TimerStep, "selectOptionOnComplete"> & {
+  selectOptionOnComplete?: boolean;
+};
+
 export class TimerDashboardLogic {
   static readonly minimumSeconds = 1;
 
@@ -21,7 +25,8 @@ export class TimerDashboardLogic {
           fixedSeconds: 30,
           minSeconds: 20,
           maxSeconds: 45,
-          enabled: true
+          enabled: true,
+          selectOptionOnComplete: true
         },
         {
           id: "timer-drill",
@@ -30,7 +35,8 @@ export class TimerDashboardLogic {
           fixedSeconds: 60,
           minSeconds: 20,
           maxSeconds: 90,
-          enabled: true
+          enabled: true,
+          selectOptionOnComplete: true
         }
       ],
       options: [
@@ -71,10 +77,17 @@ export class TimerDashboardLogic {
   }
 
   static canRun(config: TimerConfig): boolean {
-    return this.activeTimers(config).length > 0 && this.activeOptions(config).length > 0;
+    const activeTimers = this.activeTimers(config);
+    const hasSelectionTimer = activeTimers.some((timer) => timer.selectOptionOnComplete);
+
+    return activeTimers.length > 0 && (!hasSelectionTimer || this.activeOptions(config).length > 0);
   }
 
-  static moveTimer(timers: TimerStep[], timerId: string, direction: TimerMoveDirection): TimerStep[] {
+  static moveTimer(
+    timers: TimerStep[],
+    timerId: string,
+    direction: TimerMoveDirection
+  ): TimerStep[] {
     const currentIndex = timers.findIndex((timer) => timer.id === timerId);
 
     if (currentIndex === -1) {
@@ -110,7 +123,7 @@ export class TimerDashboardLogic {
     return Math.max(0, Math.round(value));
   }
 
-  static normalizeTimer(timer: TimerStep): TimerStep {
+  static normalizeTimer(timer: PersistedTimerStep): TimerStep {
     const minSeconds = this.normalizeSeconds(timer.minSeconds);
     const maxSeconds = Math.max(minSeconds, this.normalizeSeconds(timer.maxSeconds));
 
@@ -119,7 +132,8 @@ export class TimerDashboardLogic {
       label: timer.label.trim(),
       fixedSeconds: this.normalizeSeconds(timer.fixedSeconds),
       minSeconds,
-      maxSeconds
+      maxSeconds,
+      selectOptionOnComplete: timer.selectOptionOnComplete ?? true
     };
   }
 

@@ -89,7 +89,12 @@ export const TimerEditor = () => {
       eyebrow="Timers"
       title="Step Intervals"
       actions={
-        <button className={styles.headerButton} type="button" onClick={() => dispatch(addTimer())} aria-label="Add timer">
+        <button
+          className={styles.headerButton}
+          type="button"
+          onClick={() => dispatch(addTimer())}
+          aria-label="Add timer"
+        >
           <Plus size={18} />
         </button>
       }
@@ -106,16 +111,30 @@ export const TimerEditor = () => {
         {timers.map((timer, timerIndex) => (
           <article className={styles.timerCard} key={timer.id}>
             <div className={styles.cardHeader}>
-              <label className={styles.enabledToggle}>
-                <input
-                  type="checkbox"
-                  checked={timer.enabled}
-                  onChange={(event) =>
-                    dispatch(updateTimer({ id: timer.id, enabled: event.target.checked }))
-                  }
-                />
-                <span>Enabled</span>
-              </label>
+              <div className={styles.buttonWrapper}>
+                <label className={styles.enabledToggle}>
+                  <input
+                    type="checkbox"
+                    checked={timer.enabled}
+                    onChange={(event) =>
+                      dispatch(updateTimer({ id: timer.id, enabled: event.target.checked }))
+                    }
+                  />
+                  <span>Enabled</span>
+                </label>
+                <label className={styles.enabledToggle}>
+                  <input
+                    type="checkbox"
+                    checked={timer.selectOptionOnComplete}
+                    onChange={(event) =>
+                      dispatch(
+                        updateTimer({ id: timer.id, selectOptionOnComplete: event.target.checked })
+                      )
+                    }
+                  />
+                  <span>Pick option</span>
+                </label>
+              </div>
               <div className={styles.cardActions}>
                 <button
                   type="button"
@@ -146,7 +165,9 @@ export const TimerEditor = () => {
               <span>Name</span>
               <input
                 value={timer.label}
-                onChange={(event) => dispatch(updateTimer({ id: timer.id, label: event.target.value }))}
+                onChange={(event) =>
+                  dispatch(updateTimer({ id: timer.id, label: event.target.value }))
+                }
               />
             </label>
             <div className={styles.row}>
